@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NTQQ 头像工具</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>NTQQ 头像工具</h1>
+  <p class="sub">高清 / 透明头像 · 方形裁剪 · 经 NapCat 直传新版 QQ（无损 PNG，不经客户端压缩）</p>
+</header>
+
+<main>
+  <section class="editor-card">
+    <div id="dropzone">
+      <div class="dz-inner">
+        <div class="dz-icon">🖼️</div>
+        <div>拖入图片，或<button id="btn-open" class="link">选择文件</button></div>
+        <div class="dz-hint">PNG / JPG / WebP / BMP · PNG 透明通道将完整保留</div>
+      </div>
+      <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.webp,.bmp">
+    </div>
+    <div id="editor" class="hidden">
+      <div class="canvas-wrap"><canvas id="canvas"></canvas></div>
+      <div class="toolbar">
+        <button id="btn-zoom-out" title="缩小">−</button>
+        <input type="range" id="zoom-slider" min="-100" max="100" value="0">
+        <button id="btn-zoom-in" title="放大">＋</button>
+        <span id="zoom-label" class="mono"></span>
+        <span class="spacer"></span>
+        <button id="btn-reset">复位</button>
+        <button id="btn-replace">换图</button>
+      </div>
+      <div class="toolbar">
+        <button id="btn-rot-l" title="向左旋转 90°">⟲</button>
+        <input type="range" id="rot-slider" min="-45" max="45" step="0.5" value="0" title="微调角度（双击归零）">
+        <button id="btn-rot-r" title="向右旋转 90°">⟳</button>
+        <span id="rot-label" class="mono"></span>
+        <button id="btn-flip-h" title="水平镜像翻转">⇄</button>
+        <button id="btn-flip-v" title="垂直翻转">⇅</button>
+      </div>
+      <div class="meta-row">
+        <span id="src-info" class="mono"></span>
+        <span id="alpha-badge" class="badge hidden">✓ 保留透明通道</span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="sidebar">
+    <div class="card">
+      <h2>预览</h2>
+      <div class="preview-wrap"><canvas id="preview" width="128" height="128"></canvas></div>
+      <div class="meta-row"><span id="crop-info" class="mono"></span></div>
+    </div>
+
+    <div class="card" id="login-card">
+      <h2>QQ 登录（内置通道，零安装）</h2>
+      <div id="builtin-status" class="status">检查中…</div>
+      <div id="qr-area" class="qr-area hidden">
+        <img id="qr-img" alt="登录二维码">
+        <div class="qr-tip">用手机 QQ 扫码授权登录 · <a href="#" id="btn-qr-refresh">二维码过期？点击刷新</a></div>
+      </div>
+      <div id="quick-list" class="quick-list"></div>
+      <div class="row">
+        <button id="btn-builtin-start" class="primary" style="width:auto;flex:1">启动并登录</button>
+        <button id="btn-builtin-stop">停止</button>
+      </div>
+      <button id="btn-elevate" class="hidden" style="width:100%;margin-top:8px">⚠ 以管理员身份重启工具（注入 QQ 需要）</button>
+      <p class="tip">将使用本机已装的新版 QQ（在后台以隐藏方式拉起）。每次打开都需要重新扫码登录，不会沿用上次的登录。若桌面 QQ 正登着同一账号，建议先退出，传完再登回，避免互踢。关闭本工具时会自动结束它拉起的隐藏 QQ，还原干净状态。全部数据只在本机。</p>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary style="cursor:pointer;color:var(--muted)">高级：外置 NapCat（可选）</summary>
+        <div style="margin-top:10px">
+          <label>HTTP 地址
+            <input type="text" id="napcat-url" placeholder="http://127.0.0.1:3000" spellcheck="false">
+          </label>
+          <label>Access Token（未设置可留空）
+            <input type="text" id="napcat-token" placeholder="" spellcheck="false">
+          </label>
+          <div class="row">
+            <button id="btn-save-config">保存设置</button>
+            <button id="btn-test" class="secondary">测试连接</button>
+          </div>
+          <div id="napcat-status" class="status">未测试</div>
+          <p class="tip">自带 NapCat 未登录时，上传会尝试连接此地址（例如已独立部署的 NapCat HTTP 服务）。</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>上传</h2>
+      <button id="btn-upload" class="primary" disabled>上传到 QQ 头像</button>
+      <p class="tip">上传为原始像素无损 PNG（自动遵守 3 MiB / 4096px 限制）。若报错，请先刷新 QQ 核对头像是否实际已更新（NapCat 已知偶发假阴性）。</p>
+      <div id="result" class="result hidden"></div>
+    </div>
+
+    <div class="card">
+      <h2>日志</h2>
+      <pre id="log" class="log"></pre>
+    </div>
+  </aside>
+</main>
+
+<footer>仅在本地运行 · 不保存任何票据 · 上传临时文件用后即删</footer>
+<script src="/static/editor.js"></script>
+</body>
+</html>

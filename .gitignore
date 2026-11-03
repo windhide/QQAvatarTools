@@ -1,0 +1,26 @@
+# 运行时数据（含本地令牌，绝不入库）
+config.json
+napcat/
+uploads/
+napcat.pid
+napcat_boot.log
+stop_sweep.ps1
+server_run.log
+
+# 构建产物与载荷（34MB 二进制，用 tools/download_payload.py 下载）
+payload/
+build/
+dist/
+*.spec
+*.exe
+build.log
+__pycache__/
+*.pyc
+
+# 测试运行产物
+test/received/
+test/*.log
+
+# 系统杂项
+.DS_Store
+Thumbs.db
